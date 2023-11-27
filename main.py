@@ -1,27 +1,30 @@
-import threading
+import asyncio
 
-shared_resource = 0
-lock = threading.Lock()
-
-
-def modify_shared_resource():
-    global shared_resource
-    lock.acquire()
-    try:
-        for _ in range(1000000):
-            shared_resource += 1
-    finally:
-        lock.release()
-        pass
+database = {
+    1: {"name": "John Doe", "email": "john@example.com"},
+    2: {"name": "Jane Smith", "email": "jane@example.com"},
+}
 
 
-thread1 = threading.Thread(target=modify_shared_resource)
-thread2 = threading.Thread(target=modify_shared_resource)
+async def search_users_in_db(query):
+    await asyncio.sleep(1)
+    results = []
+    for user_id, user_info in database.items():
+        if query.lower() in user_info["name"].lower():
+            results.append(user_info)
+    return results
 
-thread1.start()
-thread2.start()
 
-thread1.join()
-thread2.join()
+async def handle_form_input():
+    while True:
+        user_input = input('Enter data : ')
+        search_result = await search_users_in_db(user_input)
+        if not search_result:
+            print(f"No user with name '{user_input}' found. Please try again.")
+        else:
+            print(f"Search request complete: '{user_input}': {search_result}")
 
-print("Значення спільного ресурсу:", shared_resource)
+try:
+    asyncio.run(handle_form_input())
+except KeyboardInterrupt:
+    print("\nExiting the program.")
