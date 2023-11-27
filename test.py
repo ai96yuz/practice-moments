@@ -20,14 +20,17 @@ time.sleep(4)
 
 checkbox = driver.find_element(By.XPATH, '//*[@id="challenge-stage"]')
 
-if not checkbox.is_selected():
-    checkbox.click()
+# C4PTCH4 solver ///
 
-time.sleep(15)
-checkbox.click()
+# if not checkbox.is_selected():
+#     checkbox.click()
+#
+# time.sleep(15)
+# checkbox.click()
+#
+# time.sleep(15)
+# checkbox.click()
 
-time.sleep(15)
-checkbox.click()
 # submit_button = driver.find_element(By.ID, "submit")
 # submit_button.click()
 
