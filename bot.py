@@ -73,10 +73,12 @@ async def command_tips_handler(message: Message) -> None:
 async def download_video(video_link):
     try:
         yt = YouTube(video_link)
+        # video_path = f'{os.path.expanduser("~")}/Downloads/{yt.title}.mp4'
         video_path = f'{os.path.expanduser("~")}/Downloads/{yt.title}.mp4'
-        print(video_path)
         video = yt.streams.filter(progressive=True, file_extension='mp4').first()
         video.download(video_path)
+        fixer = yt.title
+        video_path = video_path + f'/{fixer}.mp4'
         return video_path
     except Exception as e:
         print(f"Error: {e}")
@@ -88,11 +90,14 @@ async def download_command(message: types.Message):
     video_url = message.text.split(maxsplit=1)[1]
     video_path = await download_video(video_url)
 
-    if video_path and os.path.isfile(video_path):
+    print(video_path)
+    print(type(video_path))
+
+    if video_path:
         await message.reply("Video downloaded. Sending back to you...")
-        with open(video_path, 'rb') as video_file:
-            video = video_file.read()
-            await bot.send_video(message.chat.id, video)
+
+        input_video = types.InputFile(video_path)
+        await bot.send_video(message.chat.id, input_video)
 
         os.remove(video_path)
     else:
